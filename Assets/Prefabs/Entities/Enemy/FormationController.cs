@@ -9,6 +9,7 @@ public class FormationController : MonoBehaviour
     public float formHeight;                //Enemy formation height - NOTE! set in inspector
     public bool movingRight = true;         //Enemy movement direction flag
     public float speed = 5f;                //Enemy movement speed
+    public float spawnDelay = 0.5f;         //Enemy spawn creation delay
 
     private float xmax;                     //Left boundry of enemy formation
     private float xmin;                     //Right boundry of enemy formation
@@ -24,12 +25,7 @@ public class FormationController : MonoBehaviour
         xmin = leftBoundry.x;
         //Edge of screen stuff - end
 
-       
-        //Spawn an enemy ship at each EnemyFormation 'position'
-        foreach (Transform child in transform) {
-                GameObject enemy = Instantiate(enemyPrefab, child.transform.position , Quaternion.identity) as GameObject;
-                enemy.transform.parent = child;
-        } //Spawn an enemy ship at each EnemyFormation 'position' -end
+        SpawnUntilFull();  //Populate with enemies
 
     }
 
@@ -63,6 +59,9 @@ public class FormationController : MonoBehaviour
 
         if (AllMembersDead()) {    //Are all the enemies dead?
             Debug.Log("Empty formation - All the Enemies are dead");
+
+            SpawnUntilFull();
+
         }
 
     } //void Update -end
@@ -83,10 +82,42 @@ public class FormationController : MonoBehaviour
 
 
 
+    void SpawnEnemies() {    //Enemy Spawner function
+        //Spawn an enemy ship at each EnemyFormation 'position'
+        foreach (Transform child in transform) {
+            GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
+            enemy.transform.parent = child;
+        } //Spawn an enemy ship at each EnemyFormation 'position' -end
+
+    }
+
+
+
+    void SpawnUntilFull() {
+        Transform freePosition = NextFreePosition();  //
+        if (freePosition) {
+            GameObject enemy = Instantiate(enemyPrefab, freePosition.position, Quaternion.identity) as GameObject;
+            enemy.transform.parent = freePosition;
+        }
+            if (NextFreePosition()) {
+                Invoke("SpawnUntilFull", spawnDelay);    //Invokes the function again after period of time held in spawnDelay
+            }
+        }
 
 
 
 
+    Transform NextFreePosition() {   //Single enemy spawner function
+
+        foreach (Transform childPositionGameObject in transform) {
+            if (childPositionGameObject.childCount == 0) {   //child Position no enemy in it?
+                return childPositionGameObject;  
+            }
+        }
+        return null;            
+
+
+    }
 
 
 }
