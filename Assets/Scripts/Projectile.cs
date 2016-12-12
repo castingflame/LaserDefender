@@ -17,4 +17,3 @@ public class Projectile : MonoBehaviour {
 
 }
 
-//Hello World! - GitHub test
