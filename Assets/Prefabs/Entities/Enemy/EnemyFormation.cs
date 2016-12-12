@@ -8,6 +8,17 @@ public class EnemyFormation : MonoBehaviour {
     public float health = 150f;
     public float projectileSpeed = 10;
     public float shotsPerSecond = 0.5f;
+    public int scoreValue = 150;
+
+    private ScoreKeeper scoreKeeper;
+
+
+
+    private void Start() {
+        scoreKeeper = GameObject.Find("Score").GetComponent<ScoreKeeper>();   //get this at runtime
+        
+    }
+
 
     void Update() {
        
@@ -27,19 +38,23 @@ public class EnemyFormation : MonoBehaviour {
 
     }
 
+    
     void OnTriggerEnter2D(Collider2D collider) {
         Projectile missile = collider.gameObject.GetComponent<Projectile>();
 
-        if (missile) {
+        if (missile) {    //Enemy collided with a Projectile?
             health -= missile.GetDamage();
             missile.Hit();
-            if (health <= 0) {
+
+            if (health <= 0) {    //Enemy ready to die?
                 Destroy(gameObject);
+                scoreKeeper.Score(scoreValue);  //Hit enemy. Pass 'scoreValue' to the ScoreKeeper
+                
             }
 
         }
 
 
-    }
+    } //OnTriggerEnter2D  -end
 
 }
