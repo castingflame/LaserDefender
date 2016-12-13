@@ -10,6 +10,11 @@ public class PlayerController : MonoBehaviour {
     public float projectileSpeed;
     public float firingRate = 0.2f;
     public float playerHealth = 20050f;
+
+    public AudioClip fireSound;    //drag and drop the clip into the inspector
+
+
+
     float xmin;
     float xmax;
 
@@ -31,6 +36,9 @@ public class PlayerController : MonoBehaviour {
         Vector3 startPosition = transform.position + new Vector3(0, 1, 0);
         GameObject beam = Instantiate(projectile, startPosition, Quaternion.identity) as GameObject;
         beam.GetComponent<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);
+
+        AudioSource.PlayClipAtPoint(fireSound, transform.position);  //Play fire SFX
+
 
     }
 
