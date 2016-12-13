@@ -36,8 +36,9 @@ public class EnemyFormation : MonoBehaviour {
 
     void Fire() {
 
-        Vector3 startPosition = transform.position + new Vector3(0, -1, 0);
-        GameObject missile = Instantiate(projectile, startPosition, Quaternion.identity) as GameObject;
+        GameObject missile = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
+
+
         missile.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -projectileSpeed);
 
         AudioSource.PlayClipAtPoint(fireSound, transform.position);  //Play fire SFX
@@ -55,12 +56,8 @@ public class EnemyFormation : MonoBehaviour {
             if (health <= 0) {    //Enemy ready to die?
                 Die();
             }
-
-        } // if (missile) -end
-
-
-    } //OnTriggerEnter2D  -end
-
+         } // if (missile) -end
+      } //OnTriggerEnter2D  -end
 
 
     void Die() {

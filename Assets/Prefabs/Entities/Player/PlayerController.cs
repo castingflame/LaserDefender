@@ -10,10 +10,12 @@ public class PlayerController : MonoBehaviour {
     public float projectileSpeed;
     public float firingRate = 0.2f;
     public float playerHealth = 20050f;
+    
 
+    public AudioClip hitSound;     //drag and drop the clip into the inspector    
     public AudioClip fireSound;    //drag and drop the clip into the inspector
 
-
+    public LevelManager levelManager;
 
     float xmin;
     float xmax;
@@ -28,7 +30,9 @@ public class PlayerController : MonoBehaviour {
 
         xmin = leftmost.x + padding;
         xmax = rightmost.x - padding;
-        }
+
+        
+    }
 
 
     void Fire()
@@ -52,26 +56,23 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKeyUp(KeyCode.Space)){
             CancelInvoke("Fire");
-        }
-
-            //Projectile -end
+        }//Projectile -end
 
 
 
-            //Player movement
-            if (Input.GetKey(KeyCode.LeftArrow)) {
+        //Player movement
+        if (Input.GetKey(KeyCode.LeftArrow)) {
             transform.position += Vector3.left * speed * Time.deltaTime;
-            }
+        }
         else if (Input.GetKey(KeyCode.RightArrow)) {
             transform.position += Vector3.right * speed * Time.deltaTime;
-            }
+        }
 
         //restrict the player to the gamespace
         float newX = Mathf.Clamp(transform.position.x, xmin, xmax);
         transform.position = new Vector3(newX, transform.position.y, transform.position.z);
         
         //Player movement -end
-
     }
 
 
@@ -81,8 +82,11 @@ public class PlayerController : MonoBehaviour {
         if (missile) {
             playerHealth -= missile.GetDamage();
             missile.Hit();
+
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);  //Play hit SFX
+
             if (playerHealth <= 0) {
-                Destroy(gameObject);
+                Die();
             }
 
         }
@@ -92,7 +96,14 @@ public class PlayerController : MonoBehaviour {
 
 
 
+    void Die() {
 
+        Destroy(gameObject);
+        
+        LevelManager levMan = GameObject.Find("LevelManager").GetComponent<LevelManager>(); //Get the LevelManager.sc attached to the LevelManager game object 
+        levMan.LoadLevel("Loose");
+
+    }
 
 
 }

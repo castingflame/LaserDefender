@@ -4,13 +4,14 @@ using System.Collections;
 
 public class ScoreKeeper : MonoBehaviour {
 
-    public int score = 0;
+    public static int score = 0;    //make this a static 
 
     private Text myText;
     
 
     void Start() {
         myText = GetComponent<Text>();
+        myText.text = "0";
         Reset();
     }
 
@@ -21,9 +22,9 @@ public class ScoreKeeper : MonoBehaviour {
     }
 
 
-    public void Reset() {
+    public static void Reset() {
         score = 0;
-        myText.text = score.ToString();
+        
 
     }
 
